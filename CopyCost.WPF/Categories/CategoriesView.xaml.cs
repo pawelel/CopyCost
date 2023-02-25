@@ -1,7 +1,7 @@
 using System.Windows.Controls;
 using CopyCost.WPF.Navigation;
 
-namespace CopyCost.WPF.Category;
+namespace CopyCost.WPF.Categories;
 
 public partial class CategoriesView : UserControl
 {

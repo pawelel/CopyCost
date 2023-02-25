@@ -1,9 +1,9 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CopyCost.WPF.Category;
-using CopyCost.WPF.Customer;
+using CopyCost.WPF.Categories;
+using CopyCost.WPF.Customers;
 using CopyCost.WPF.Navigation;
-using CopyCost.WPF.Payment;
+using CopyCost.WPF.Payments;
 
 namespace CopyCost.WPF.Main;
 

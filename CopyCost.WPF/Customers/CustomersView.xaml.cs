@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace CopyCost.WPF.Customer;
+namespace CopyCost.WPF.Customers;
 
 public partial class CustomersView : UserControl
 {

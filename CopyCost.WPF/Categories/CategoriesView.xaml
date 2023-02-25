@@ -1,0 +1,64 @@
+<UserControl x:Class="CopyCost.WPF.Categories.CategoriesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:categories="clr-namespace:CopyCost.WPF.Categories"
+             xmlns:local="clr-namespace:CopyCost.WPF"
+             xmlns:converters="clr-namespace:CopyCost.WPF.Converters"
+             xmlns:behaviors="clr-namespace:CopyCost.WPF.Behaviors"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=categories:CategoryViewModel}">
+
+    <UserControl.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid Background="Aquamarine">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <!-- Add button -->
+        <Button Content="Add" HorizontalAlignment="Left" Margin="10,10,0,0" Width="{Binding ElementName=CategoriesListView, Path=ActualWidth}"/>
+        <!-- Left column with list of categories -->
+        <ListView Grid.Column="0" Grid.Row="1" x:Name="CategoriesListView"
+                  ItemsSource="{Binding Categories}"
+                  behaviors:ListViewExtensions.LostFocusCommand="{Binding ListViewLostFocusCommand}"
+                  SelectedItem="{Binding SelectedCategory}"
+                  Width="200">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" Padding="10" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!-- Right column with category details and buttons -->
+        <Grid Grid.Row="0"  Grid.Column="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="{Binding SelectedCategory.Name}" FontSize="20" />
+            <TextBlock Text="{Binding SelectedCategory.Description}" Grid.Row="1" />
+
+            <!-- Edit and Delete buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Visibility="{Binding SelectedCategory, Converter={StaticResource NullToVisibilityConverter}}">
+                <Button Content="Edit" Margin="0,10,10,0"/>
+                <Button Content="Delete" Margin="0,10,0,0"/>
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+    
+</UserControl>

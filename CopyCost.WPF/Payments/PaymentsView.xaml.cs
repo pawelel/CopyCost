@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace CopyCost.WPF.Payment;
+namespace CopyCost.WPF.Payments;
 
 public partial class PaymentsView : UserControl
 {
