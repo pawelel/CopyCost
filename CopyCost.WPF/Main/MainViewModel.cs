@@ -10,8 +10,8 @@ namespace CopyCost.WPF.Main;
 public partial class MainViewModel : ObservableObject
 {
    private readonly CategoryViewModel _viewModel = new();
-    [ObservableProperty] private ObservableCollection<NavigationItem> _navigationItems = new();
-    [ObservableProperty] private NavigationItem _selectedNavigationItem = new();
+   [ObservableProperty] private ObservableCollection<NavigationItem> _navigationItems;
+    [ObservableProperty] private NavigationItem _selectedNavigationItem;
 
     public MainViewModel()
     {

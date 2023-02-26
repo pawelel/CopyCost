@@ -21,13 +21,11 @@ public static class ListViewExtensions
 
     private static void OnLostFocusCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is ListView listView)
+        if (d is not ListView listView) return;
+        listView.LostFocus -= OnLostFocus;
+        if (e.NewValue is ICommand command)
         {
-            listView.LostFocus -= OnLostFocus;
-            if (e.NewValue is ICommand command)
-            {
-                listView.LostFocus += OnLostFocus;
-            }
+            listView.LostFocus += OnLostFocus;
         }
     }
 
