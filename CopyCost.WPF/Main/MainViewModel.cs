@@ -9,7 +9,7 @@ namespace CopyCost.WPF.Main;
 
 public partial class MainViewModel : ObservableObject
 {
-   private readonly CategoryViewModel _viewModel = new();
+   private readonly CategoriesViewModel _viewModel = new();
    [ObservableProperty] private ObservableCollection<NavigationItem> _navigationItems;
     [ObservableProperty] private NavigationItem _selectedNavigationItem;
 
@@ -23,10 +23,14 @@ public partial class MainViewModel : ObservableObject
         }};
         _selectedNavigationItem = NavigationItems[0];
 
-        // Set the DataContext of the CategoriesView to an instance of CategoryViewModel
+        // Set the DataContext of the CategoriesView to an instance of CategoriesViewModel
         if (NavigationItems[2].Content is CategoriesView categoriesView)
         {
-            categoriesView.DataContext = new CategoryViewModel();
+            categoriesView.DataContext = new CategoriesViewModel();
+        }
+        if (NavigationItems[1].Content is CustomersView customersView)
+        {
+            customersView.DataContext = new CustomersViewModel();
         }
     }
 }

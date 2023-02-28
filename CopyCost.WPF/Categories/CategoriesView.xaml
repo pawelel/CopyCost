@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:categories="clr-namespace:CopyCost.WPF.Categories"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=categories:CategoryViewModel}">
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=categories:CategoriesViewModel}">
     <Grid Background="Aquamarine">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -19,7 +18,7 @@
         </Grid.ColumnDefinitions>
         <!-- Add button -->
         <Button Grid.Row="0" Grid.Column="0" Command="{Binding ShowAddPopupCommand}" Content="Add" HorizontalAlignment="Left" Margin="10,10,0,0" Width="{Binding ElementName=CategoriesListView, Path=ActualWidth}"/>
-        <Popup Grid.Row="0" Grid.Column="0" x:Name="AddPopup" IsOpen="{Binding IsAddPopupOpen}" PlacementTarget="{Binding ElementName=AddButton}" Placement="Center">
+        <Popup StaysOpen="False" Grid.Row="0" Grid.Column="0" x:Name="AddPopup" IsOpen="{Binding IsAddPopupOpen}" Placement="MousePoint">
             <Border Background="White" BorderBrush="Gray" BorderThickness="1" CornerRadius="3">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -36,7 +35,7 @@
                     <TextBlock Text="Add Category" FontSize="20" FontWeight="Bold" Margin="0 0 0 10" />
 
                     <TextBlock Grid.Column="0"  Text="Name:" Grid.Row="1" />
-                    <TextBox Text="{Binding NewCategoryName}" Grid.Row="1" Grid.Column="1" Margin="5" />
+                    <TextBox Text="{Binding NewCategoryTitle}" Grid.Row="1" Grid.Column="1" Margin="5" />
 
                     <TextBlock Grid.Column="0" Text="Description:" Grid.Row="2" />
                     <TextBox Text="{Binding NewCategoryDescription}" Grid.Row="2" Grid.Column="1" Margin="5" />
@@ -49,7 +48,7 @@
                 </Grid>
             </Border>
         </Popup>
-        <Popup Grid.Row="0" Grid.Column="0" x:Name="EditPopup" IsOpen="{Binding IsEditPopupOpen}" PlacementTarget="{Binding ElementName=EditButton}" Placement="Center">
+        <Popup StaysOpen="False" Grid.Row="0" Grid.Column="0" x:Name="EditPopup" IsOpen="{Binding IsEditPopupOpen}" Placement="MousePoint">
             <Border Background="White" BorderBrush="Gray" BorderThickness="1" CornerRadius="3">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -66,7 +65,7 @@
                     <TextBlock Text="Edit Category" FontSize="20" FontWeight="Bold" Margin="0 0 0 10" />
 
                     <TextBlock Grid.Column="0"  Text="Name:" Grid.Row="1" />
-                    <TextBox Text="{Binding EditCategoryName}" Grid.Row="1" Grid.Column="1" Margin="5" />
+                    <TextBox Text="{Binding EditCategoryTitle}" Grid.Row="1" Grid.Column="1" Margin="5" />
 
                     <TextBlock Grid.Column="0" Text="Description:" Grid.Row="2" />
                     <TextBox Text="{Binding EditCategoryDescription}" Grid.Row="2" Grid.Column="1" Margin="5" />
@@ -92,7 +91,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding Name}" Padding="10" />
+                        <TextBlock Grid.Column="0" Text="{Binding Title}" Padding="10" />
                         <Button Grid.Column="1"  Content="Edit" Command="{Binding Path=DataContext.ShowEditPopupCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
                             <Button.Style>
                                 <Style>
@@ -119,7 +118,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="{Binding SelectedCategory.Name}" FontSize="20" />
+            <TextBlock Text="{Binding SelectedCategory.Title}" FontSize="20" />
             <TextBlock Text="{Binding SelectedCategory.Description}" Grid.Row="1" />
             
         </Grid>

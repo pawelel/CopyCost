@@ -3,9 +3,127 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:customers="clr-namespace:CopyCost.WPF.Customers"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="Aqua">
-        
+             d:DataContext="{d:DesignInstance Type=customers:CustomersViewModel}">
+    <Grid Background="Aquamarine">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <!-- Add button -->
+        <Button Grid.Row="0" Grid.Column="0" x:Name="AddCustomerButton" Command="{Binding ShowAddPopupCommand}" Content="Add" HorizontalAlignment="Left" Margin="10,10,0,0" Width="{Binding ElementName=CustomersListView, Path=ActualWidth}"/>
+        <Popup StaysOpen="False" Grid.Row="0" Grid.Column="0" x:Name="AddPopup" IsOpen="{Binding IsAddPopupOpen}" Placement="MousePoint">
+            <Border Background="White" BorderBrush="Gray" BorderThickness="1" CornerRadius="3">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Add Customer" FontSize="20" FontWeight="Bold" Margin="0 0 0 10" />
+
+                    <TextBlock Grid.Column="0"  Text="Name:" Grid.Row="1" />
+                    <TextBox Text="{Binding NewCustomerTitle}" Grid.Row="1" Grid.Column="1" Margin="5" />
+
+                    <TextBlock Grid.Column="0" Text="Description:" Grid.Row="2" />
+                    <TextBox Text="{Binding NewCustomerDescription}" Grid.Row="2" Grid.Column="1" Margin="5" />
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right">
+                        <Button Content="Cancel" Margin="5" Command="{Binding ClosePopupCommand}" />
+                        <Button Content="Add" Margin="5" Command="{Binding AddCustomerCommand}" />
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+        </Popup>
+        <Popup StaysOpen="False" Grid.Row="0" Grid.Column="0" x:Name="EditPopup" IsOpen="{Binding IsEditPopupOpen}" Placement="MousePoint">
+            <Border Background="White" BorderBrush="Gray" BorderThickness="1" CornerRadius="3">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Edit Customer" FontSize="20" FontWeight="Bold" Margin="0 0 0 10" />
+
+                    <TextBlock Grid.Column="0"  Text="Name:" Grid.Row="1" />
+                    <TextBox Text="{Binding EditCustomerTitle}" Grid.Row="1" Grid.Column="1" Margin="5" />
+
+                    <TextBlock Grid.Column="0" Text="Description:" Grid.Row="2" />
+                    <TextBox Text="{Binding EditCustomerDescription}" Grid.Row="2" Grid.Column="1" Margin="5" />
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right">
+                        <Button Content="Cancel" Margin="5" Command="{Binding ClosePopupCommand}" />
+                        <Button Content="Save" Margin="5" Command="{Binding EditCustomerCommand}" />
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+        </Popup>
+        <!-- Left column with list of customers -->
+        <ListView Grid.Column="0" Grid.Row="1" x:Name="CustomersListView"
+                  ItemsSource="{Binding Customers}"
+                  SelectedItem="{Binding SelectedCustomer}"
+                  Width="200">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Title}" Padding="10" />
+                        <Button Grid.Column="1"  Content="Edit" Command="{Binding Path=DataContext.ShowEditPopupCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+                            <Button.Style>
+                                <Style>
+                                    <Setter Property="Button.Visibility" Value="Collapsed"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="True">
+                                            <Setter Property="Button.Visibility" Value="Visible"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+
+        <!-- Right column with customer details and buttons -->
+        <Grid Grid.Row="0"  Grid.Column="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="{Binding SelectedCustomer.Title}" FontSize="20" />
+            <TextBlock Text="{Binding SelectedCustomer.Description}" Grid.Row="1" />
+            
+        </Grid>
+
     </Grid>
+    
 </UserControl>
