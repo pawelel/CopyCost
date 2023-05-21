@@ -1,0 +1,59 @@
+﻿@page "/customers"
+@inject IDialogService DialogService
+@inject ICustomerRepository CustomerRepository
+@inject NavigationManager NavigationManager
+
+<MudText Typo="Typo.h6">Klienci</MudText>
+
+<MudDataGrid Items="@_customers" @ref="_dataGrid" QuickFilter="SearchCustomer">
+    <ToolBarContent>
+        <MudTextField @bind-Value="_searchCustomer" Label="Szukaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"/>
+        <MudSpacer/>
+        <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="(() => EditCustomer(new()))" Color="Color.Success" EndIcon="@Icons.Material.Filled.Person"></MudButton>
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn TProperty="string" T="Customer" Property="x => x.Name" Title="Nazwa" Sortable="true"/>
+        <PropertyColumn TProperty="string" T="Customer" Property="x => x.Description" Title="Opis" Sortable="true"/>
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate Context="context">
+                <MudIconButton Icon="@Icons.Material.Outlined.Visibility" OnClick="@(() => NavigateToCustomerDetails(context.Item))"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => EditCustomer(context.Item))"/>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+    <MudDataGridPager T="Customer" RowsPerPageString="Elementów na stronie" PageSizeOptions="new[]{5, 10, 25, 50, 100}"/>
+    </PagerContent>
+</MudDataGrid>
+
+
+@code{
+
+    private IEnumerable<Customer> _customers = new List<Customer>();
+    private string _searchCustomer = string.Empty;
+    private MudDataGrid<Customer> _dataGrid = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _customers = await CustomerRepository.GetAllAsync();
+    }
+
+    private Func<Customer, bool> SearchCustomer => c => string.IsNullOrWhiteSpace(_searchCustomer) || c.Name.Contains(_searchCustomer, StringComparison.OrdinalIgnoreCase);
+
+    private async Task EditCustomer(Customer customer)
+    {
+        var title = customer.Id == 0 ? "Dodaj klienta" : "Edytuj klienta";
+        var parameters = new DialogParameters { { "Customer", customer } };
+     var dialog =   await DialogService.ShowAsync<EditCustomerDialog>(title, parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+        _customers = await CustomerRepository.GetAllAsync();
+        }
+    }
+
+    private void NavigateToCustomerDetails(Customer customer)
+    {
+        NavigationManager.NavigateTo($"customers/{customer.Id}");
+    }
+}

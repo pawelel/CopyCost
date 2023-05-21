@@ -1,0 +1,157 @@
+﻿@inject ICategoryRepository CategoryRepository
+@inject ISnackbar Snackbar
+@inject ICustomerRepository CustomerRepository
+@inject IPaymentRepository PaymentRepository
+
+<MudDialog>
+    <DialogContent>
+        <MudForm @ref="_form" Model="@Payment">
+            <MudDatePicker @bind-Date="Payment.Date" Label="Data" For="@(() => Payment.Date)"  Required="true" Error="@(Payment.Date == null)" ErrorText="Uzupełnij datę." />
+            <MudSelect T="Customer" @bind-Value="@Payment.Customer" ToStringFunc="@_customerToString" Label="Wybierz klienta" Error="@(Payment.Customer.Id==0)" ErrorText="Wybierz klienta.">
+                @foreach (var customer in Customers)
+                {
+                    <MudSelectItem Value="@customer"/>
+                }
+            </MudSelect>
+
+            <MudSelect T="Category" @bind-Value="@Payment.Category" ToStringFunc="@_categoryToString" Label="Wybierz kategorię" Error="@(Payment.Category.Id==0)" ErrorText="Wybierz kategorię.">
+                @foreach (var category in Categories)
+                {
+                    <MudSelectItem Value="@category"/>
+                }
+            </MudSelect>
+
+            <MudTextField T="int" InputType="InputType.Number" @bind-Value="Payment.Amount" Label="Liczba" For="@(() => Payment.Amount)"  Required="true" Error="@(Payment.Amount == 0)" ErrorText="Uzupełnij liczbę." />
+            <MudTextField T="decimal" InputType="InputType.Number" Format="F2" Culture="@(new CultureInfo("en-US"))" @bind-Value="Payment.Per1000" Label="Cena za 1000 znaków" For="@(() => Payment.Per1000)"  Required="true" Error="@(Payment.Per1000 == 0)" ErrorText="Uzupełnij cenę za 1000 znaków." />
+        </MudForm>
+        <MudDialog @bind-IsVisible="@_isDeleteVisible">
+            <DialogContent>
+                <MudText Typo="Typo.h6">
+                    Czy na pewno chcesz usunąć płatność z dnia @Payment.Date?.Date?
+                </MudText>
+                <MudText Typo="Typo.body2">Klient: @Payment.Customer.Name</MudText>
+                <MudText Typo="Typo.body2">Kategoria: @Payment.Category.Name</MudText>
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="Delete" Color="Color.Secondary">Usuń</MudButton>
+                <MudButton OnClick="CloseDelete" Color="Color.Primary">Anuluj</MudButton>
+            </DialogActions>
+        </MudDialog>
+    </DialogContent>
+    <DialogActions>
+        @if (Payment.Id > 0)
+        {
+            <MudButton OnClick="OpenDelete" Color="Color.Secondary">Usuń</MudButton>
+        }
+        <MudButton OnClick="Save" Color="Color.Primary">Zapisz</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code{
+
+    [Parameter]
+    public Payment Payment { get; set; } = new();
+
+    [CascadingParameter]
+    public MudDialogInstance Dialog { get; set; } = new();
+
+    private MudForm _form = new();
+    private async Task Save()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            if (Payment.Id == 0)
+            {
+                await AddPayment();
+            }
+            else
+            {
+                await EditPayment();
+            }
+        }
+    }
+
+
+
+    private readonly Func<Customer?, string> _customerToString = c => c?.Name ?? string.Empty;
+    private readonly Func<Category?, string> _categoryToString = c => c?.Name ?? string.Empty;
+
+    private async Task EditPayment()
+    {
+        var result = await PaymentRepository.UpdateAsync(Payment);
+
+        if (result.IsSuccess)
+        {
+            Snackbar.Add($"Płatność {Payment.Date?.Date} zaktualizowana.", Severity.Success);
+            Dialog.Close(DialogResult.Ok(Payment));
+        }
+        else
+        {
+            foreach (var error in result.Errors)
+            {
+                Snackbar.Add(error.Value, Severity.Error);
+            }
+        }
+    }
+
+    private async Task AddPayment()
+    {
+        var payment = new Payment { Date = Payment.Date, CustomerId = Payment.Customer.Id, CategoryId = Payment.Category.Id, Amount = Payment.Amount, Per1000 = Payment.Per1000 };
+        var result = await PaymentRepository.AddAsync(payment);
+
+        if (result.IsSuccess)
+        {
+            Snackbar.Add($"Płatność {Payment.Date?.ToShortDateString()} dla klienta {Payment.Customer.Name} w kategorii {Payment.Category.Name} dodana.", Severity.Success);
+            Dialog.Close(DialogResult.Ok(Payment));
+        }
+        else
+        {
+            foreach (var error in result.Errors)
+            {
+                Snackbar.Add(error.Value, Severity.Error);
+            }
+        }
+    }
+
+    private IEnumerable<Customer> Customers { get; set; } = new List<Customer>();
+    private IEnumerable<Category> Categories { get; set; } = new List<Category>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Customers = await CustomerRepository.GetAllAsync();
+        Categories = await CategoryRepository.GetAllAsync();
+    }
+
+    private async Task Delete()
+    {
+        var result = await PaymentRepository.DeleteAsync(Payment);
+
+        if (result.IsSuccess)
+        {
+            Snackbar.Add($"Płatność {Payment.Date} usunięta.", Severity.Success);
+            _isDeleteVisible = false;
+            Dialog.Close(DialogResult.Ok(Payment));
+        }
+        else
+        {
+            foreach (var error in result.Errors)
+            {
+                Snackbar.Add(error.Value, Severity.Error);
+            }
+        }
+    }
+
+    private bool _isDeleteVisible;
+
+    private void OpenDelete()
+    {
+        _isDeleteVisible = true;
+    }
+
+    private void CloseDelete()
+    {
+        _isDeleteVisible = false;
+    }
+
+}

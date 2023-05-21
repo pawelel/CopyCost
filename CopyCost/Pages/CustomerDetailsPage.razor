@@ -1,0 +1,49 @@
+﻿@page "/customers/{customerId:int}"
+@inject ICustomerRepository CustomerRepository
+@inject ICategoryRepository CategoriesRepository
+
+<MudText Typo="Typo.h6">Szczegóły klienta</MudText>
+@if (_customer is not null)
+{
+    <MudText Typo="Typo.body1">Nazwa: @_customer.Name</MudText>
+    <MudText Typo="Typo.body1">Opis: @_customer.Description</MudText>
+    <MudDataGrid Items="@_categorySummaries" Filterable="true" Sortable="true">
+        <ToolBarContent>
+            <MudTextField Label="Szukaj" @bind-Value="@_searchString" />
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn T="CategoryByText" TProperty="DateTime" Format="MMMM yyyy" Property="x=>x.MonthYear" Title="Miesiąc" Sortable="true" Filterable="true"/>
+            <PropertyColumn T="CategoryByText" TProperty="string" Title="Kategoria" Sortable="true" Filterable="true" Property="x=>x.Category"/>
+            <PropertyColumn T="CategoryByText" TProperty="int" Title="Liczba tekstów" Sortable="true" Filterable="true" Property="x=>x.TextCount"/>
+            <PropertyColumn T="CategoryByText" TProperty="decimal" Title="Suma znaków" Sortable="true" Filterable="true" Property="x=>x.TotalCharacters"/>
+            <PropertyColumn T="CategoryByText" TProperty="decimal" Title="Suma" Format="F2" Sortable="true" Filterable="true" Property="x=>x.Total"/>
+        </Columns>
+           <PagerContent>
+           <MudDataGridPager T="CategoryByText" RowsPerPageString="Elementów na stronie" PageSizeOptions="new[]{5, 10, 25, 50, 100}"/>
+              </PagerContent>
+    </MudDataGrid>
+}
+else
+{
+    <MudPaper Class="pa-16 ma-2" Outlined="true" Square="true">
+        <MudText Typo="Typo.h6">Nie znaleziono klienta</MudText>
+    </MudPaper>
+}
+
+
+@code {
+
+    [Parameter]
+    public int CustomerId { get; set; }
+
+    private List<CategoryByText>? _categorySummaries;
+    private Customer? _customer = new();
+    private string _searchString = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _customer = await CustomerRepository.GetAsync(CustomerId);
+        _categorySummaries = await CategoriesRepository.GetCategoriesByTextAsync(CustomerId);
+    }
+
+}

@@ -1,0 +1,128 @@
+﻿@inject ICategoryRepository CategoryRepository
+@inject ISnackbar Snackbar
+<MudDialog>
+    <DialogContent>
+        <MudForm @ref="_form" Model="@Category">
+            <MudTextField T="string" @bind-Value="Category.Name" Error="@NameHasError" ErrorText="@NameError" Immediate="true" Label="Nazwa kategorii" For="@(() => Category.Name)"/>
+            <MudTextField T="string" @bind-Value="Category.Description" Error="@DescriptionHasError" ErrorText="@DescriptionError" Immediate="true" Label="Opis kategorii" For="@(() => Category.Description)"/>
+        </MudForm>
+        <MudDialog @bind-IsVisible="_isDeleteVisible">
+            <DialogContent>
+                <MudText Typo="Typo.h6">Czy na pewno chcesz usunąć kategorię @Category.Name?</MudText>
+                @if (_paymentsExist)
+                {
+                    <MudText Typo="Typo.body2">Kategoria posiada powiązane płatności. Usunięcie kategorii spowoduje usunięcie powiązanych płatności.</MudText>
+                }
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="Delete" Color="Color.Secondary">Usuń</MudButton>
+                <MudButton OnClick="CloseDelete" Color="Color.Primary">Anuluj</MudButton>
+            </DialogActions>
+        </MudDialog>
+    </DialogContent>
+    <DialogActions>
+        @if (Category.Id > 0)
+        {
+            <MudButton OnClick="OpenDelete" Color="Color.Secondary">Usuń</MudButton>
+        }
+        <MudButton OnClick="Save" Color="Color.Primary">Zapisz</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+
+    [Parameter]
+    public Category Category { get; set; } = new();
+
+    [CascadingParameter]
+    public MudDialogInstance Dialog { get; set; } = new();
+
+    private MudForm _form = new();
+
+    private async Task Save()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            if (Category.Id == 0)
+            {
+                await AddCategory();
+            }
+            else
+            {
+                await EditCategory();
+            }
+        }
+    }
+
+    private async Task EditCategory()
+    {
+        var result = await CategoryRepository.UpdateAsync(Category);
+        _errors = result.Errors;
+        if (result.IsSuccess)
+        {
+            Snackbar.Add($"Kategoria {Category.Name} zaktualizowana.", Severity.Success);
+            Dialog.Close(DialogResult.Ok(Category));
+        }
+        else
+        {
+            foreach (var error in result.Errors)
+            {
+                Snackbar.Add(error.Value, Severity.Error);
+            }
+        }
+    }
+
+    private async Task AddCategory()
+    {
+        var result = await CategoryRepository.AddAsync(Category);
+        _errors = result.Errors;
+        if (result.IsSuccess)
+        {
+            Snackbar.Add($"Kategoria {Category.Name} dodana.", Severity.Success);
+            Dialog.Close(DialogResult.Ok(Category));
+        }
+        else
+        {
+            foreach (var error in result.Errors)
+            {
+                Snackbar.Add(error.Value, Severity.Error);
+            }
+        }
+    }
+
+    private Dictionary<string, string> _errors = new();
+    private string NameError => _errors.ContainsKey("Name") ? _errors["Name"] : string.Empty;
+    private string DescriptionError => _errors.ContainsKey("Description") ? _errors["Description"] : string.Empty;
+    private bool NameHasError => _errors.ContainsKey("Name");
+    private bool DescriptionHasError => _errors.ContainsKey("Description");
+    private bool _paymentsExist;
+    private bool _isDeleteVisible;
+
+    private async Task Delete()
+    {
+        var result = await CategoryRepository.DeleteAsync(Category);
+        if (result.IsSuccess)
+        {
+            Snackbar.Add($"Kategoria {Category.Name} usunięta.", Severity.Success);
+            _isDeleteVisible = false;
+            Dialog.Close(DialogResult.Ok(Category));
+        }
+        else
+        {
+            foreach (var error in result.Errors)
+            {
+                Snackbar.Add(error.Value, Severity.Error);
+            }
+        }
+    }
+
+    private async Task OpenDelete()
+    {
+        _isDeleteVisible = true;
+        _paymentsExist = await CategoryRepository.PaymentsExistAsync(Category.Id);
+    }
+
+    private void CloseDelete() => _isDeleteVisible = false;
+}

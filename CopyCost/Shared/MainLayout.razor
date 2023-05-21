@@ -1,0 +1,50 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider IsDarkMode="true" Theme="_customTheme"/>
+<MudDialogProvider
+    FullWidth="true"
+    MaxWidth="MaxWidth.Medium"
+    CloseButton="true"
+    Position="DialogPosition.Center"
+    CloseOnEscapeKey="true"/>
+<MudSnackbarProvider/>
+
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((_) => DrawerToggle())"/>
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <MudText Align="Align.Center" Typo="Typo.h5">Copy Cost</MudText>
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+  private readonly MudTheme _customTheme = new()
+    {
+        Palette = new PaletteLight {
+            Primary = Colors.Blue.Default,
+            Secondary = Colors.Green.Accent4,
+            AppbarBackground = Colors.Red.Default,
+        },
+        PaletteDark = new PaletteDark {
+            Primary = Colors.Blue.Lighten1,
+            Error = Colors.Red.Lighten3,
+        },
+
+        LayoutProperties = new LayoutProperties {
+            DrawerWidthLeft = "220px"
+
+        }
+    };
+}

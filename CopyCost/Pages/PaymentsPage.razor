@@ -1,0 +1,53 @@
+﻿@page "/"
+@inject IDialogService DialogService
+@inject IPaymentRepository PaymentRepository
+
+<MudText Typo="Typo.h6">Płatności</MudText>
+
+<MudDataGrid Items="_payments" @ref="_dataGrid" Filterable="true">
+    <ToolBarContent>
+        <MudSpacer/>
+        <MudButton Disabled="@_canCreate" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => EditPayment(new()))" Color="Color.Success" EndIcon="@Icons.Material.Filled.MonetizationOn"></MudButton>
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn TProperty="DateTime?" Format="dd-MM-yyyy" T="Payment" Property="x => x.Date" Title="Data" Sortable="true"/>
+        <PropertyColumn TProperty="int" T="Payment" Property="x => x.Amount" Title="Liczba" Sortable="true"/>
+        <PropertyColumn TProperty="decimal" T="Payment" Format="F2" Property="x => x.Per1000" Title="Cena za 1000 znaków" Sortable="true"/>
+        <PropertyColumn TProperty="decimal" Format="F2" T="Payment" Property="x => x.Total" Title="Razem" Sortable="true"/>
+        <PropertyColumn TProperty="string" T="Payment" Property="x => x.Category.Name" Title="Kategoria" Sortable="true"/>
+        <PropertyColumn TProperty="string" T="Payment" Property="x => x.Customer.Name" Title="Klient" Sortable="true"/>
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudIconButton Disabled="@_canCreate" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => EditPayment((Payment)context.Item))"/>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="Payment" RowsPerPageString="Elementów na stronie" PageSizeOptions="new[] { 5, 10, 25, 50, 100 }"/>
+    </PagerContent>
+</MudDataGrid>
+
+
+@code{
+
+    private IEnumerable<Payment> _payments = new List<Payment>();
+    private bool _canCreate;
+    private MudDataGrid<Payment> _dataGrid = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _payments = await PaymentRepository.GetAllAsync();
+        _canCreate = !await PaymentRepository.AnyCategoryCustomerExist();
+    }
+
+    private async Task EditPayment(Payment payment)
+    {
+        var title = payment.Id == 0 ? "Dodaj płatność" : "Edytuj płatność";
+        var parameters = new DialogParameters { { "Payment", payment } };
+        var dialog = await DialogService.ShowAsync<EditPaymentDialog>(title, parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+            _payments = await PaymentRepository.GetAllAsync();
+    }
+
+}
