@@ -72,7 +72,8 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.5" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-        <PackageReference Include="MudBlazor" Version="6.2.5" />
+        <PackageReference Include="MudBlazor" Version="6.3.0" />
+        <PackageReference Include="PSC.Blazor.Components.Chartjs" Version="6.0.40" />
     </ItemGroup>
 
 </Project>

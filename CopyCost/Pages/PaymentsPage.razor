@@ -1,10 +1,11 @@
 ﻿@page "/"
+
 @inject IDialogService DialogService
 @inject IPaymentRepository PaymentRepository
 
 <MudText Typo="Typo.h6">Płatności</MudText>
 
-<MudDataGrid Items="_payments" @ref="_dataGrid" Filterable="true">
+<MudDataGrid Items="_payments" @ref="_dataGrid" Filterable="true" FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive">
     <ToolBarContent>
         <MudSpacer/>
         <MudButton Disabled="@_canCreate" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => EditPayment(new()))" Color="Color.Success" EndIcon="@Icons.Material.Filled.MonetizationOn"></MudButton>
@@ -13,7 +14,7 @@
         <PropertyColumn TProperty="DateTime?" Format="dd-MM-yyyy" T="Payment" Property="x => x.Date" Title="Data" Sortable="true"/>
         <PropertyColumn TProperty="int" T="Payment" Property="x => x.Amount" Title="Liczba" Sortable="true"/>
         <PropertyColumn TProperty="decimal" T="Payment" Format="F2" Property="x => x.Per1000" Title="Cena za 1000 znaków" Sortable="true"/>
-        <PropertyColumn TProperty="decimal" Format="F2" T="Payment" Property="x => x.Total" Title="Razem" Sortable="true"/>
+        <PropertyColumn TProperty="decimal" Format="F2" T="Payment" Property="x => x.Total" AggregateDefinition="_sumDefinition" Title="Razem" Sortable="true"/>
         <PropertyColumn TProperty="string" T="Payment" Property="x => x.Category.Name" Title="Kategoria" Sortable="true"/>
         <PropertyColumn TProperty="string" T="Payment" Property="x => x.Customer.Name" Title="Klient" Sortable="true"/>
         <TemplateColumn CellClass="d-flex justify-end">
@@ -23,7 +24,7 @@
         </TemplateColumn>
     </Columns>
     <PagerContent>
-        <MudDataGridPager T="Payment" RowsPerPageString="Elementów na stronie" PageSizeOptions="new[] { 5, 10, 25, 50, 100 }"/>
+        <MudDataGridPager T="Payment" RowsPerPageString="Elementów na stronie" PageSizeOptions="new[] { 25, 5, 10, 50, 100, 150, 300, 350 }"/>
     </PagerContent>
 </MudDataGrid>
 
@@ -49,5 +50,16 @@
         if (!result.Canceled)
             _payments = await PaymentRepository.GetAllAsync();
     }
+
+
+   private readonly AggregateDefinition<Payment> _sumDefinition = new()
+    {
+   Type = AggregateType.Custom,
+        CustomAggregate = x =>
+        {
+            var sum = x.Sum(p => p.Total);
+            return $"Razem: {sum} zł";
+        }
+    };
 
 }

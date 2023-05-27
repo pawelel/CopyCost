@@ -4,20 +4,19 @@
 
 @if (_category is not null)
 {
-    <MudText Typo="Typo.body1">Nazwa: @_category.Name</MudText>
-    <MudText Typo="Typo.body1">Opis: @_category.Description</MudText>
     <MudDataGrid Items="@_categorySummaries" Filterable="true" Sortable="true">
         <ToolBarContent>
-            <MudTextField Label="Szukaj" @bind-Value="@_searchString" Variant="Variant.Outlined"/>
+            <MudText Typo="Typo.body1">Nazwa: @_category.Name</MudText>
+            <MudText Typo="Typo.body1">Opis: @_category.Description</MudText>
         </ToolBarContent>
         <Columns>
             <PropertyColumn T="CategorySummary" Format="MMMM yyyy" TProperty="DateTime" Property="x => x.MonthYear" Title="Miesiąc" Sortable="true" Filterable="true"/>
             <PropertyColumn T="CategorySummary" TProperty="string" Title="Klient" Sortable="true" Filterable="true" Property="x => x.Customer"/>
-            <PropertyColumn T="CategorySummary" TProperty="int" Title="Liczba tekstów" Sortable="true" Filterable="true" Property="x => x.TextCount"/>
-            <PropertyColumn T="CategorySummary" TProperty="decimal" Title="Cena za 1000" Sortable="true" Filterable="true" Format="F2" Property="x => x.PricePer1000"/>
+            <PropertyColumn T="CategorySummary" TProperty="int" Title="Liczba tekstów/godzin" Sortable="true" Filterable="true" Property="x => x.TextCount"/>
+            <PropertyColumn T="CategorySummary" TProperty="decimal" Title="Suma" Sortable="true" Filterable="true" Format="C" Property="x => x.Total"/>
         </Columns>
         <PagerContent>
-            <MudDataGridPager T="CategorySummary" RowsPerPageString="Elementów na stronie" PageSizeOptions="new[] { 5, 10, 25, 50, 100 }"/>
+            <MudDataGridPager T="CategorySummary" RowsPerPageString="Elementów na stronie" PageSizeOptions="new[] { 25, 5, 10, 50, 100 }"/>
         </PagerContent>
     </MudDataGrid>
 }
@@ -36,8 +35,6 @@ else
 
     private List<CategorySummary>? _categorySummaries;
     private Category? _category = new();
-    private string _searchString = string.Empty;
-
     protected override async Task OnInitializedAsync()
     {
         _category = await CategoryRepository.GetAsync(CategoryId);

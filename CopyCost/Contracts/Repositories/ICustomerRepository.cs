@@ -1,5 +1,5 @@
-﻿using CopyCost.Entities;
-using CopyCost.Extensions;
+﻿using CopyCost.CCExtensions;
+using CopyCost.Entities;
 
 namespace CopyCost.Contracts.Repositories;
 

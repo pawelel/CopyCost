@@ -1,15 +1,15 @@
 ﻿@page "/customers"
+
 @inject IDialogService DialogService
 @inject ICustomerRepository CustomerRepository
 @inject NavigationManager NavigationManager
 
 <MudText Typo="Typo.h6">Klienci</MudText>
 
-<MudDataGrid Items="@_customers" @ref="_dataGrid" QuickFilter="SearchCustomer">
+<MudDataGrid Items="@_customers" @ref="_dataGrid" Filterable="true" FilterMode="DataGridFilterMode.Simple">
     <ToolBarContent>
-        <MudTextField @bind-Value="_searchCustomer" Label="Szukaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"/>
         <MudSpacer/>
-        <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="(() => EditCustomer(new()))" Color="Color.Success" EndIcon="@Icons.Material.Filled.Person"></MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => EditCustomer(new()))" Color="Color.Success" EndIcon="@Icons.Material.Filled.Person"></MudButton>
     </ToolBarContent>
     <Columns>
         <PropertyColumn TProperty="string" T="Customer" Property="x => x.Name" Title="Nazwa" Sortable="true"/>
@@ -30,15 +30,12 @@
 @code{
 
     private IEnumerable<Customer> _customers = new List<Customer>();
-    private string _searchCustomer = string.Empty;
     private MudDataGrid<Customer> _dataGrid = new();
 
     protected override async Task OnInitializedAsync()
     {
         _customers = await CustomerRepository.GetAllAsync();
     }
-
-    private Func<Customer, bool> SearchCustomer => c => string.IsNullOrWhiteSpace(_searchCustomer) || c.Name.Contains(_searchCustomer, StringComparison.OrdinalIgnoreCase);
 
     private async Task EditCustomer(Customer customer)
     {

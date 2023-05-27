@@ -1,7 +1,8 @@
-﻿using CopyCost.Contracts.Repositories;
+﻿using CopyCost.CCExtensions;
+using CopyCost.Contracts.Repositories;
 using CopyCost.Data;
+using CopyCost.Dto;
 using CopyCost.Entities;
-using CopyCost.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CopyCost.Repositories;
@@ -90,4 +91,27 @@ public class PaymentRepository : IPaymentRepository
         await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
         return await context.Payments.AnyAsync(p => p.Id == id, cancellationToken);
     }
+
+    public async Task<List<CustomerEarnings>> GetCustomerEarningsPerMonthAsync(int year, CancellationToken cancellationToken = default)
+    {
+        var payments = await GetAllAsync(cancellationToken);
+
+        var customerEarningsList = new List<CustomerEarnings>();
+        var groupedPayments = payments
+            .Where(p => p.Date?.Year == year)
+            .GroupBy(p => p.Customer.Name);
+
+        foreach (var group in groupedPayments)
+        {
+            for (var month = 1; month <= 12; month++)
+            {
+                var monthlyEarnings = group.Where(p => p.Date?.Month == month).Sum(p => p.Total);
+                customerEarningsList.Add(new CustomerEarnings { CustomerName = group.Key, Year = year, Month = month, Earnings = monthlyEarnings });
+            }
+        }
+
+        return customerEarningsList;
+    }
+
+
 }

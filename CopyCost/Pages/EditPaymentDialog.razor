@@ -1,4 +1,5 @@
-﻿@inject ICategoryRepository CategoryRepository
+﻿
+@inject ICategoryRepository CategoryRepository
 @inject ISnackbar Snackbar
 @inject ICustomerRepository CustomerRepository
 @inject IPaymentRepository PaymentRepository
@@ -27,7 +28,7 @@
         <MudDialog @bind-IsVisible="@_isDeleteVisible">
             <DialogContent>
                 <MudText Typo="Typo.h6">
-                    Czy na pewno chcesz usunąć płatność z dnia @Payment.Date?.Date?
+                    Czy na pewno chcesz usunąć płatność z dnia @Payment.Date?.Date.ToShortDateString()?
                 </MudText>
                 <MudText Typo="Typo.body2">Klient: @Payment.Customer.Name</MudText>
                 <MudText Typo="Typo.body2">Kategoria: @Payment.Category.Name</MudText>
@@ -83,7 +84,7 @@
 
         if (result.IsSuccess)
         {
-            Snackbar.Add($"Płatność {Payment.Date?.Date} zaktualizowana.", Severity.Success);
+            Snackbar.Add($"Płatność {Payment.Date?.Date.ToShortDateString()} zaktualizowana.", Severity.Success);
             Dialog.Close(DialogResult.Ok(Payment));
         }
         else
@@ -129,7 +130,7 @@
 
         if (result.IsSuccess)
         {
-            Snackbar.Add($"Płatność {Payment.Date} usunięta.", Severity.Success);
+            Snackbar.Add($"Płatność {Payment.Date?.ToShortDateString()} usunięta.", Severity.Success);
             _isDeleteVisible = false;
             Dialog.Close(DialogResult.Ok(Payment));
         }

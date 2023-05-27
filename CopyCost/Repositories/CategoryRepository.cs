@@ -1,8 +1,8 @@
-﻿using CopyCost.Contracts.Repositories;
+﻿using CopyCost.CCExtensions;
+using CopyCost.Contracts.Repositories;
 using CopyCost.Data;
 using CopyCost.Dto;
 using CopyCost.Entities;
-using CopyCost.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CopyCost.Repositories;
@@ -105,7 +105,7 @@ public class CategoryRepository : ICategoryRepository
                 MonthYear = g.Key.MonthYear,
                 Customer = g.Key.Customer,
                 TextCount = g.Count(),
-                PricePer1000 = g.Average(p => p.Per1000)
+                Total = g.Sum(p => p.Amount * p.Per1000/1000M)
             })
             .ToList() ?? new List<CategorySummary>();
 

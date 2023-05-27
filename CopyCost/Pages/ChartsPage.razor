@@ -1,20 +1,266 @@
 ﻿@page "/charts"
+@using Align = PSC.Blazor.Components.Chartjs.Models.Common.Align
+@using Colors = CopyCost.CCExtensions.CcColors
+
+@inject IPaymentRepository PaymentRepository
 <MudText Typo="Typo.h6">Wykresy</MudText>
 
+<MudPaper Style="color: #373740ff">
+    <MudGrid Spacing="0">
+        <MudItem xs="2">
+            <MudSelect T="int" Label="Wybierz rok" ValueChanged="SelectedYearChanged" Value="_selectedYear" Variant="Variant.Text" Immediate="true">
+                @for (var year = DateTime.Now.Year; year >= 2017; year--)
+                {
+                    <MudSelectItem Value="@year"/>
+                }
+            </MudSelect>
+        </MudItem>
 
-<div>
-    <MudChart ChartType="ChartType.Bar" ChartSeries="@_series" @bind-SelectedIndex="_index" XAxisLabels="@_xAxisLabels" Width="100%" Height="350px"></MudChart>
-</div>
+        <MudItem xs="10">
+            @if (_isChartRendered)
+            {
+                <Chart Config="_config1" @ref="_chart1" Height="400px"></Chart>
+            }
+        </MudItem>
+        @for (var month = 0; month < 12; month++)
+        {
+            if (_configs?[month] == null || !_configs[month].Data.Datasets.Any())
+            {
+                continue;
+            }
+            var month1 = month;
+            <MudItem xs="4">
+                <Chart Config="@_configs[month1]" @ref="@_charts[month1]" Height="350px"></Chart>
+            </MudItem>
+        }
+    </MudGrid>
+</MudPaper>
 
 @code {
-    private int _index = -1;
+    private bool _isChartRendered = true;
+    private int _selectedYear = DateTime.Now.Year;
+    private PieChartConfig[] _configs = new PieChartConfig[12];
+    private Chart[] _charts = new Chart[12];
+    private readonly string[] _xAxisLabels = { "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień" };
 
-    private readonly List<ChartSeries> _series = new()
+    List<CustomerEarnings> _customerEarningsList = new();
+
+    private BarChartConfig _config1 = new();
+    private Chart _chart1 = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        new ChartSeries { Name = "Customer 1", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15 } },
-        new ChartSeries { Name = "Customer 2", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31 } },
-        new ChartSeries { Name = "Customer 3", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18 } },
-    };
+        await SelectedYearChanged(_selectedYear);
+    }
 
-    private readonly string[] _xAxisLabels = { "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień" };
+    private void SetConfig(int year = 2023)
+    {
+        _config1 = new BarChartConfig
+        {
+            Options = new()
+            {
+                Responsive = true,
+                Plugins = new()
+                {
+                    Title = new Title
+                    {
+                        Display = true,
+                        Text = $"Zarobki od klientów w roku {year}",
+                        Font = new()
+                        {
+                            Size = 20
+                        },
+                        Color = "#ffffff"
+                    },
+                    Legend = new()
+                    {
+                        Align = Align.Center,
+                        Display = true,
+                        Position = LegendPosition.Bottom
+                    },
+                    Zoom = new Zoom
+                    {
+                        Enabled = true,
+                        Mode = "xy",
+                        ZoomOptions = new ZoomOptions
+                        {
+                            Wheel = new Wheel
+                            {
+                                Enabled = true
+                            },
+                            Pinch = new Pinch
+                            {
+                                Enabled = true
+                            }
+                        }
+                    }
+                },
+                Scales = new()
+                {
+                    {
+                        Scales.XAxisId, new Axis
+                        {
+                            Stacked = true,
+                            Ticks = new Ticks
+                            {
+                                MaxRotation = 0,
+                                MinRotation = 0
+                            },
+                        }
+                    },
+                    {
+                        Scales.YAxisId, new Axis
+                        {
+                            Stacked = true,
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    private void SetPies()
+    {
+        _configs = new PieChartConfig[12];
+        _charts = new Chart[12];
+        for (var i = 0; i < 12; i++)
+        {
+            var customersByMonth = _customerEarningsList.Where(x => x.Month == i + 1).ToList();
+            if (customersByMonth.Count == 0)
+            {
+                continue;
+            }
+            var sum = customersByMonth.Sum(x => x.Earnings);
+            var earnings = sum == 0 ? _xAxisLabels[i] : $"{_xAxisLabels[i]}: {sum:C}";
+            _charts[i] = new();
+            var monthDataSet = new PieDataset
+            {
+                BackgroundColor = new List<string>(),
+                BorderWidth = 1,
+                Data = new List<decimal?>()
+            };
+            _configs[i] = new()
+            {
+                Options = new()
+                {
+                    Responsive = true,
+                    MaintainAspectRatio = false,
+                    Rotation = -90,
+                    Circumference = 180,
+                    Plugins = new()
+                    {
+                        Title = new Title
+                        {
+                            Display = true,
+                            Text = earnings,
+                            Font = new()
+                            {
+                                Size = 20
+                            },
+                            Color = "#ffffff"
+                        },
+                        Legend = new()
+                        {
+                            Align = Align.Center,
+                            Display = true,
+                            Position = LegendPosition.Bottom
+                        }
+                    }
+                }
+            };
+
+            for (var customerIndex = 0; customerIndex < customersByMonth.Count; customerIndex++)
+            {
+                var customer = customersByMonth[customerIndex];
+                if (customer.Earnings == 0)
+                {
+                    continue;
+                }
+                var customerName = customer.CustomerName;
+                _configs[i].Data.Labels.Add(customerName);
+                var backgroundColor = Colors.Palette1[customerIndex % Colors.Palette1.Count];
+                monthDataSet.BackgroundColor.Add(backgroundColor);
+                monthDataSet.Data.Add(customer.Earnings);
+            }
+            _configs[i].Data.Datasets.Add(monthDataSet);
+        }
+    }
+
+    private async Task UpdateChartSeries()
+    {
+        _customerEarningsList = await PaymentRepository.GetCustomerEarningsPerMonthAsync(_selectedYear);
+    }
+
+    private async Task SelectedYearChanged(int year)
+    {
+        _selectedYear = year;
+        SetConfig(_selectedYear);
+        await UpdateChartSeries();
+        AddDataToChart();
+        SetPies();
+        _isChartRendered = false;
+        StateHasChanged();
+        _isChartRendered = true;
+    }
+
+    private void AddDataToChart()
+    {
+        _config1.Data.Labels.AddRange(_xAxisLabels);
+        var groupedCustomerEarnings = _customerEarningsList.GroupBy(x => x.CustomerName).ToList();
+        var customerIndex = 0;
+        var monthlyTotals = new List<decimal?>(new decimal?[12]);
+
+        foreach (var customerEarnings in groupedCustomerEarnings)
+        {
+            var monthlyEarnings = new List<decimal?>(new decimal?[12]);
+            foreach (var earning in customerEarnings)
+            {
+                monthlyEarnings[earning.Month - 1] = earning.Earnings;
+                if (monthlyTotals[earning.Month - 1].HasValue)
+                {
+                    monthlyTotals[earning.Month - 1] += earning.Earnings;
+                }
+                else
+                {
+                    monthlyTotals[earning.Month - 1] = earning.Earnings;
+                }
+            }
+
+            var backgroundColor = Colors.Palette1[customerIndex % Colors.Palette1.Count];
+            var borderColor = Colors.PaletteBorder1[customerIndex % Colors.PaletteBorder1.Count];
+
+            _config1.Data.Datasets.Add(new BarDataset
+            {
+                Label = customerEarnings.Key,
+                BackgroundColor = new List<string>
+                {
+                    backgroundColor
+                },
+                BorderColor = new List<string>
+                {
+                    borderColor
+                },
+                BorderWidth = 1,
+                Data = monthlyEarnings.ToList()
+            });
+
+            customerIndex++;
+        }
+        _config1.Data.Datasets.Add(new BarDataset
+        {
+            Label = "Suma miesięczna",
+            BackgroundColor = new List<string>
+            {
+                "rgba(0,0,0,0)"
+            },
+            Data = monthlyTotals.ToList(),
+            BorderColor = new List<string>
+            {
+                "rgba(0,0,0,0.5)"
+            },
+            Type = "line"
+        });
+    }
+
+
 }

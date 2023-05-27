@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using Align = MudBlazor.Align
+
+@inherits LayoutComponentBase
 
 <MudThemeProvider IsDarkMode="true" Theme="_customTheme"/>
 <MudDialogProvider
@@ -18,7 +20,9 @@
         <NavMenu/>
     </MudDrawer>
     <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="pa-2">
         @Body
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
 

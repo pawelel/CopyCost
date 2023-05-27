@@ -198,11 +198,9 @@ public class OperationResult
 }
 ```
 
-## To do
+## Charts
 
-- [ ] Charts
-
-![Charts](./images/charts-todo.png)
+![Charts](./images/charts.png)
 
 
 ## How to run

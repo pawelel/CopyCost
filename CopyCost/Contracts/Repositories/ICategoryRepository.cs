@@ -1,6 +1,6 @@
-﻿using CopyCost.Dto;
+﻿using CopyCost.CCExtensions;
+using CopyCost.Dto;
 using CopyCost.Entities;
-using CopyCost.Extensions;
 
 namespace CopyCost.Contracts.Repositories;
 

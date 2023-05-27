@@ -1,7 +1,7 @@
-﻿using CopyCost.Contracts.Repositories;
+﻿using CopyCost.CCExtensions;
+using CopyCost.Contracts.Repositories;
 using CopyCost.Data;
 using CopyCost.Entities;
-using CopyCost.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CopyCost.Repositories;
