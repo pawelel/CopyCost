@@ -25,7 +25,7 @@ public class PaymentRepository : IPaymentRepository
     public async Task<IEnumerable<Payment>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
-        var result = await context.Payments.Include(p=>p.Customer).Include(p=>p.Category).ToListAsync(cancellationToken);
+        var result = await context.Payments.Include(p=>p.Customer).Include(p=>p.Category).OrderByDescending(x=>x.Date).ToListAsync(cancellationToken);
         return result;
     }
 

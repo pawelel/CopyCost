@@ -12,7 +12,7 @@
     </ToolBarContent>
     <Columns>
         <PropertyColumn TProperty="DateTime?" Format="dd-MM-yyyy" T="Payment" Property="x => x.Date" Title="Data" Sortable="true"/>
-        <PropertyColumn TProperty="int" T="Payment" Property="x => x.Amount" Title="Liczba" Sortable="true"/>
+        <PropertyColumn TProperty="int" T="Payment" Property="x => x.Amount" AggregateDefinition="_sumCharacters" Title=" Liczba" Sortable="true" />
         <PropertyColumn TProperty="decimal" T="Payment" Format="F2" Property="x => x.Per1000" Title="Cena za 1000 znaków" Sortable="true"/>
         <PropertyColumn TProperty="decimal" Format="F2" T="Payment" Property="x => x.Total" AggregateDefinition="_sumDefinition" Title="Razem" Sortable="true"/>
         <PropertyColumn TProperty="string" T="Payment" Property="x => x.Category.Name" Title="Kategoria" Sortable="true"/>
@@ -61,5 +61,15 @@
             return $"Razem: {sum} zł";
         }
     };
+
+    private readonly AggregateDefinition<Payment> _sumCharacters = new()
+        {
+            Type = AggregateType.Custom,
+            CustomAggregate = x =>
+            {
+                var sum = x.Sum(p => p.Amount);
+                return $"Razem: {sum} znaków";
+            }
+        };
 
 }
