@@ -1,4 +1,5 @@
-﻿using CopyCost.CCExtensions;
+﻿using System.Globalization;
+using CopyCost.CCExtensions;
 using CopyCost.Contracts.Repositories;
 using CopyCost.Data;
 using CopyCost.Entities;
@@ -25,17 +26,21 @@ public class CustomerRepository : ICustomerRepository
     public async Task<IEnumerable<Customer>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-        return await context.Customers.ToListAsync(cancellationToken);
+        return context.Customers.AsEnumerable()
+            .OrderBy(c => c.Name, StringComparer.Create(new CultureInfo("pl-PL"), false))
+            .ToList();
     }
+
 
     public async Task<OperationResult> AddAsync(Customer customer, CancellationToken cancellationToken = default)
     {
-
         if (await IsCustomerNameTaken(customer.Name, cancellationToken: cancellationToken))
             return OperationResult.Failed(nameof(customer.Name), $"Customer with name {customer.Name} already exists");
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
         await context.Customers.AddAsync(customer, cancellationToken);
-        return await context.SaveChangesAsync(cancellationToken) > 0 ? OperationResult.Success("Customer added successfully") : OperationResult.Failed(nameof(customer.Id), "Customer not added");
+        return await context.SaveChangesAsync(cancellationToken) > 0
+            ? OperationResult.Success("Customer added successfully")
+            : OperationResult.Failed(nameof(customer.Id), "Customer not added");
     }
 
     public async Task<OperationResult> UpdateAsync(Customer customer, CancellationToken cancellationToken = default)
@@ -46,7 +51,9 @@ public class CustomerRepository : ICustomerRepository
             return OperationResult.Failed(nameof(customer.Name), $"Customer with name {customer.Name} already exists");
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
         context.Customers.Update(customer);
-        return await context.SaveChangesAsync(cancellationToken) > 0 ? OperationResult.Success("Customer updated successfully") : OperationResult.Failed(nameof(customer.Id), "Customer not updated");
+        return await context.SaveChangesAsync(cancellationToken) > 0
+            ? OperationResult.Success("Customer updated successfully")
+            : OperationResult.Failed(nameof(customer.Id), "Customer not updated");
     }
 
     public async Task<OperationResult> DeleteAsync(Customer customer, CancellationToken cancellationToken = default)
@@ -69,6 +76,5 @@ public class CustomerRepository : ICustomerRepository
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
         var lowerCaseName = name.ToLower();
         return await context.Customers.AnyAsync(c => c.Name.ToLower() == lowerCaseName && c.Id != id, cancellationToken);
-
     }
 }

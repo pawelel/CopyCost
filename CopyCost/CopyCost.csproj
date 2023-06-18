@@ -44,7 +44,7 @@
         <Authors>Paweł Przytuła</Authors>
         <Description>Aplikacja do zbierania informacji o napisanych tekstach.</Description>
         <PackageIcon>GirlFace.png</PackageIcon>
-        <NeutralLanguage>en</NeutralLanguage>
+        <NeutralLanguage>pl</NeutralLanguage>
     </PropertyGroup>
 
     <ItemGroup>

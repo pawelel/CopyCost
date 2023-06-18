@@ -1,4 +1,5 @@
-﻿using CopyCost.CCExtensions;
+﻿using System.Globalization;
+using CopyCost.CCExtensions;
 using CopyCost.Contracts.Repositories;
 using CopyCost.Data;
 using CopyCost.Dto;
@@ -26,7 +27,9 @@ public class CategoryRepository : ICategoryRepository
     public async Task<IEnumerable<Category>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-        return await context.Categories.ToListAsync(cancellationToken);
+        return context.Categories.AsEnumerable()
+            .OrderBy(c => c.Name, StringComparer.Create(new CultureInfo("pl-PL"), false))
+            .ToList();
     }
 
     public async Task<OperationResult> AddAsync(Category category, CancellationToken cancellationToken = default)
