@@ -3,6 +3,7 @@ using CopyCost.Contracts.Repositories;
 using CopyCost.Data;
 using CopyCost.Dto;
 using CopyCost.Entities;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace CopyCost.Repositories;
@@ -85,7 +86,7 @@ public class CategoryRepository : ICategoryRepository
                 Category = g.Key.Category,
                 TextCount = g.Count(),
                 TotalCharacters = g.Sum(p => p.Amount),
-                Total = g.Sum(p => p.Amount * p.Per1000/1000M)
+                Total = g.Sum(p => p.Amount * p.Per1000 / 1000M)
             })
             .ToList() ?? new List<CategoryByText>();
 
@@ -105,7 +106,7 @@ public class CategoryRepository : ICategoryRepository
                 MonthYear = g.Key.MonthYear,
                 Customer = g.Key.Customer,
                 TextCount = g.Count(),
-                Total = g.Sum(p => p.Amount * p.Per1000/1000M)
+                Total = g.Sum(p => p.Amount * p.Per1000 / 1000M)
             })
             .ToList() ?? new List<CategorySummary>();
 

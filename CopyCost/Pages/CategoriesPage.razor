@@ -36,6 +36,14 @@
         _categories = await CategoryRepository.GetAllAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await _dataGrid.SetSortAsync(nameof(Category.Name), SortDirection.Ascending, x => x.Name, new MudBlazor.Utilities.NaturalComparer());
+        }
+    }
+
     private async Task EditCategory(Category category)
     {
         var title = category.Id == 0 ? "Dodaj kategorię" : "Edytuj kategorię";

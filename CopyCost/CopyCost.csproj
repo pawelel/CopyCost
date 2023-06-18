@@ -38,7 +38,7 @@
         <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
         <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <AppInstallerUri>C:\Users\PawelPrzytula\OneDrive\Desktop\CC</AppInstallerUri>
+        <AppInstallerUri>C:\repos\PrivateProjects\CopyCost\release</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <Title>Copy Cost</Title>
         <Authors>Paweł Przytuła</Authors>
