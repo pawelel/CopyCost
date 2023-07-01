@@ -1,0 +1,1 @@
+C:\repos\PrivateProjects\CopyCost\CopyCost\CopyCost.csproj;x64

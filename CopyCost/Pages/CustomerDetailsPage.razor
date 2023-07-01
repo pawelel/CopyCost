@@ -14,8 +14,8 @@
             <PropertyColumn T="CategoryByText" TProperty="DateTime" Format="MMMM yyyy" Property="x => x.MonthYear" Title="Miesiąc" Sortable="true" Filterable="true"/>
             <PropertyColumn T="CategoryByText" TProperty="string" Title="Kategoria" Sortable="true" Filterable="true" Property="x => x.Category"/>
             <PropertyColumn T="CategoryByText" TProperty="int" Title="Liczba tekstów" Sortable="true" Filterable="true" Property="x => x.TextCount"/>
-            <PropertyColumn T="CategoryByText" TProperty="int" Title="Liczba znaków" Sortable="true" Filterable="true" Property="x => x.TotalCharacters"/>
-            <PropertyColumn T="CategoryByText" TProperty="decimal" Title="Suma" Format="C" Sortable="true" Filterable="true" Property="x => x.Total"/>
+            <PropertyColumn T="CategoryByText" TProperty="int" Title="Liczba znaków" AggregateDefinition="_sumCharacters"  Sortable="true" Filterable="true" Property="x => x.TotalCharacters"/>
+            <PropertyColumn T="CategoryByText" TProperty="decimal" Title="Suma" Format="C" Sortable="true" AggregateDefinition="_sumDefinition" Filterable="true" Property="x => x.Total"/>
         </Columns>
         <PagerContent>
             <MudDataGridPager T="CategoryByText" RowsPerPageString="Elementów na stronie" PageSizeOptions="new[] { 5, 10, 25, 50, 100 }"/>
@@ -42,5 +42,24 @@ else
         _customer = await CustomerRepository.GetAsync(CustomerId);
         _categorySummaries = await CategoriesRepository.GetCategoriesByTextAsync(CustomerId);
     }
+    private readonly AggregateDefinition<CategoryByText> _sumDefinition = new()
+    {
+        Type = AggregateType.Custom,
+        CustomAggregate = x =>
+        {
+            var sum = x.Sum(p => p.Total);
+            var roundedSum = Math.Round((decimal)sum, 2);
+            return $"Razem: {roundedSum.ToString("F2")} zł";
+        }
+    };
 
+    private readonly AggregateDefinition<CategoryByText> _sumCharacters = new()
+    {
+        Type = AggregateType.Custom,
+        CustomAggregate = x =>
+        {
+            var sum = x.Sum(p => p.TotalCharacters);
+            return $"Razem: {sum} znaków";
+        }
+    };
 }

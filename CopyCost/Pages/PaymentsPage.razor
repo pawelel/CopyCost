@@ -58,7 +58,8 @@
         CustomAggregate = x =>
         {
             var sum = x.Sum(p => p.Total);
-            return $"Razem: {sum} zł";
+            var roundedSum = Math.Round((decimal)sum, 2);
+            return $"Razem: {roundedSum.ToString("F2")} zł";
         }
     };
 
