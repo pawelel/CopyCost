@@ -1,0 +1,60 @@
+﻿@page "/checkUpdates"
+@using System.Text.Json.Serialization
+
+<MudText Typo="Typo.h6">Sprawdź aktualizacje</MudText>
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="CheckForUpdates">Sprawdź aktualizacje</MudButton>
+
+@if (_isUpdateAvailable)
+{
+    <MudText Typo="Typo.body1">Nowa wersja jest dostępna!</MudText>
+    <MudText Typo="Typo.body1">Bieżąca wersja: @_currentVersion</MudText>
+    <MudText Typo="Typo.body1">Najnowsza wersja: @_latestVersion</MudText>
+    <MudButton Color="Color.Secondary" Variant="Variant.Filled" Href="@_downloadUrl" Target="_blank">Pobierz teraz</MudButton>
+}
+else if (_checkedForUpdates)
+{
+    <MudText Typo="Typo.body1">Twoja aplikacja jest aktualna.</MudText>
+    <MudText Typo="Typo.body1">Bieżąca wersja: @_currentVersion</MudText>
+}
+
+@code {
+    private bool _isUpdateAvailable;
+    private bool _checkedForUpdates;
+    private string _downloadUrl = string.Empty;
+    private string _currentVersion = string.Empty;
+    private string? _latestVersion = string.Empty;
+
+    private async Task CheckForUpdates()
+    {
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Add("User-Agent", "request");
+
+        var response = await client.GetStreamAsync("https://api.github.com/repos/pawelel/CopyCost/releases");
+        var releases = await System.Text.Json.JsonSerializer.DeserializeAsync<List<GitHubRelease>>(response);
+
+        var latestRelease = releases?[0];
+        _latestVersion = latestRelease?.TagName.TrimStart('v');
+        if (latestRelease != null) _downloadUrl = latestRelease.HtmlUrl;
+
+        _currentVersion = VersionTracking.CurrentVersion;
+
+        var currentVersionObj = new Version(_currentVersion);
+        if (_latestVersion != null)
+        {
+            var latestVersionObj = new Version(_latestVersion);
+            _isUpdateAvailable = latestVersionObj > currentVersionObj;
+        }
+
+        _checkedForUpdates = true;
+    }
+
+    public class GitHubRelease
+    {
+        [JsonPropertyName("tag_name")]
+        public string TagName { get; set; } = string.Empty;
+
+        [JsonPropertyName("html_url")]
+        public string HtmlUrl { get; set; } = string.Empty;
+    }
+}

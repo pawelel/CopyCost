@@ -7,7 +7,7 @@
 
     For more information on package manifest files, see http://go.microsoft.com/fwlink/?LinkID=241727
   -->
-  <Identity Name="04EE47F6-1EF7-42BE-AD9B-CCCA4627EA4F" Publisher="CN=PawelPrzytula" Version="0.0.14.0" ProcessorArchitecture="x64" />
+  <Identity Name="04EE47F6-1EF7-42BE-AD9B-CCCA4627EA4F" Publisher="CN=PawelPrzytula" Version="0.0.15.0" ProcessorArchitecture="x64" />
   <mp:PhoneIdentity PhoneProductId="87D28294-F2B5-4D38-8794-5B90AE08919F" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>CopyCost</DisplayName>
