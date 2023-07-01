@@ -10,7 +10,7 @@
     <MudText Typo="Typo.body1">Nowa wersja jest dostępna!</MudText>
     <MudText Typo="Typo.body1">Bieżąca wersja: @_currentVersion</MudText>
     <MudText Typo="Typo.body1">Najnowsza wersja: @_latestVersion</MudText>
-    <MudButton Color="Color.Secondary" Variant="Variant.Filled" Href="@_downloadUrl" Target="_blank">Pobierz teraz</MudButton>
+    <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="DownloadNow">Pobierz teraz</MudButton>
 }
 else if (_checkedForUpdates)
 {
@@ -21,9 +21,9 @@ else if (_checkedForUpdates)
 @code {
     private bool _isUpdateAvailable;
     private bool _checkedForUpdates;
-    private string _downloadUrl = string.Empty;
     private string _currentVersion = string.Empty;
     private string? _latestVersion = string.Empty;
+    private string? _downloadUrl = string.Empty;
 
     private async Task CheckForUpdates()
     {
@@ -33,9 +33,8 @@ else if (_checkedForUpdates)
         var response = await client.GetStreamAsync("https://api.github.com/repos/pawelel/CopyCost/releases");
         var releases = await System.Text.Json.JsonSerializer.DeserializeAsync<List<GitHubRelease>>(response);
 
-        var latestRelease = releases?[0];
+        var latestRelease = releases?.FirstOrDefault();
         _latestVersion = latestRelease?.TagName.TrimStart('v');
-        if (latestRelease != null) _downloadUrl = latestRelease.HtmlUrl;
 
         _currentVersion = VersionTracking.CurrentVersion;
 
@@ -44,17 +43,64 @@ else if (_checkedForUpdates)
         {
             var latestVersionObj = new Version(_latestVersion);
             _isUpdateAvailable = latestVersionObj > currentVersionObj;
+            if (_isUpdateAvailable)
+            {
+                _downloadUrl = latestRelease?.Assets?.FirstOrDefault()?.BrowserDownloadUrl;
+            }
         }
 
         _checkedForUpdates = true;
     }
+
+    private async Task DownloadNow()
+    {
+        if (!string.IsNullOrEmpty(_downloadUrl))
+        {
+    // Pobieranie pliku
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetAsync(_downloadUrl);
+                if (response.IsSuccessStatusCode)
+                {
+    // Tworzenie ścieżki pliku tymczasowego z odpowiednim rozszerzeniem
+                    var tempFileName = Path.GetRandomFileName() + ".msix";
+                    var tempPath = Path.Combine(Path.GetTempPath(), tempFileName);
+
+    // Zapisywanie pliku
+                    using (var fileStream = File.Create(tempPath))
+                    {
+                        await response.Content.CopyToAsync(fileStream);
+                    }
+
+    // Uruchamianie pliku
+                    await Launcher.OpenAsync(new OpenFileRequest
+                    {
+                        File = new ReadOnlyFile(tempPath)
+                    });
+                }
+                else
+                {
+    // Obsługa błędów podczas pobierania pliku
+                    Console.WriteLine("Error downloading file");
+                }
+            }
+        }
+    }
+
+
 
     public class GitHubRelease
     {
         [JsonPropertyName("tag_name")]
         public string TagName { get; set; } = string.Empty;
 
-        [JsonPropertyName("html_url")]
-        public string HtmlUrl { get; set; } = string.Empty;
+        [JsonPropertyName("assets")]
+        public List<GitHubAsset>? Assets { get; set; }
+    }
+
+    public class GitHubAsset
+    {
+        [JsonPropertyName("browser_download_url")]
+        public string BrowserDownloadUrl { get; set; } = string.Empty;
     }
 }
