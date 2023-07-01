@@ -7,8 +7,10 @@
 {
     <MudDataGrid Items="@_categorySummaries" Filterable="true" Sortable="true">
         <ToolBarContent>
-            <MudText Typo="Typo.body1">Nazwa: @_customer.Name</MudText>
-            <MudText Typo="Typo.body1">Opis: @_customer.Description</MudText>
+            <MudText Typo="Typo.body1">Nazwa:</MudText>
+            <MudText Class="px-2" Typo="Typo.body2">@_customer.Name</MudText>
+            <MudText Typo="Typo.body1">Opis:</MudText>
+            <MudText Class="px-2" Typo="Typo.body2">@_customer.Description</MudText>
         </ToolBarContent>
         <Columns>
             <PropertyColumn T="CategoryByText" TProperty="DateTime" Format="MMMM yyyy" Property="x => x.MonthYear" Title="Miesiąc" Sortable="true" Filterable="true"/>

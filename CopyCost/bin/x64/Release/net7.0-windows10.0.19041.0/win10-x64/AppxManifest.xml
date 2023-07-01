@@ -7,11 +7,11 @@
 
     For more information on package manifest files, see http://go.microsoft.com/fwlink/?LinkID=241727
   -->
-  <Identity Name="04EE47F6-1EF7-42BE-AD9B-CCCA4627EA4F" Publisher="CN=PawelPrzytula" Version="0.0.15.0" ProcessorArchitecture="x64" />
+  <Identity Name="04EE47F6-1EF7-42BE-AD9B-CCCA4627EA4F" Publisher="CN=PawelPrzytula" Version="0.0.17.0" ProcessorArchitecture="x64" />
   <mp:PhoneIdentity PhoneProductId="87D28294-F2B5-4D38-8794-5B90AE08919F" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>CopyCost</DisplayName>
-    <PublisherDisplayName>User Name</PublisherDisplayName>
+    <PublisherDisplayName>Paweł Przytuła</PublisherDisplayName>
     <Logo>appiconStoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -20,7 +20,7 @@
     <PackageDependency Name="Microsoft.WindowsAppRuntime.1.2" MinVersion="2000.707.2303.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
   </Dependencies>
   <Resources>
-    <Resource Language="EN-US" />
+    <Resource Language="PL" />
   </Resources>
   <Applications>
     <Application Id="App" Executable="CopyCost.exe" EntryPoint="Windows.FullTrustApplication">
@@ -32,10 +32,14 @@
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
         <uap:SplashScreen Image="splashSplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape" />
+        </uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
   <Capabilities>
+    <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
   <build:Metadata>

@@ -35,16 +35,17 @@
         <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
         <PackageCertificateThumbprint>7766DCA222A1A26F200A405C19D27F2A24E2F9E6</PackageCertificateThumbprint>
         <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-        <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
         <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <AppInstallerUri>C:\repos\PrivateProjects\CopyCost\release</AppInstallerUri>
+        <AppInstallerUri>https://uploads.github.com/repos/pawelel/CopyCost/releases</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <Title>Copy Cost</Title>
         <Authors>Paweł Przytuła</Authors>
         <Description>Aplikacja do zbierania informacji o napisanych tekstach.</Description>
         <PackageIcon>GirlFace.png</PackageIcon>
         <NeutralLanguage>pl</NeutralLanguage>
+        <DefaultLanguage>pl</DefaultLanguage>
     </PropertyGroup>
 
     <ItemGroup>
@@ -63,6 +64,10 @@
 
         <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
         <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="C:\Users\PawelPrzytula\.nuget\packages\psc.blazor.components.chartjs\6.0.40\contentFiles\any\net6.0\psc_ico.ico" />
     </ItemGroup>
 
     <ItemGroup>

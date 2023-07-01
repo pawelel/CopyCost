@@ -12,42 +12,42 @@
     <PackageIdentityPublisher>CN=PawelPrzytula</PackageIdentityPublisher>
     <IntermediateOutputPath>C:\repos\PrivateProjects\CopyCost\CopyCost\obj\Debug\net7.0-windows10.0.19041.0\win10-x64\</IntermediateOutputPath>
     <RemoteDeploymentType>CopyToDevice</RemoteDeploymentType>
-    <PackageRegistrationPath></PackageRegistrationPath>
+    <PackageRegistrationPath>
+    </PackageRegistrationPath>
     <RemoveNonLayoutFiles>false</RemoveNonLayoutFiles>
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
     <LayoutDir>C:\repos\PrivateProjects\CopyCost\CopyCost\bin\Debug\net7.0-windows10.0.19041.0\win10-x64\AppX</LayoutDir>
-    <RegisteredManifestChecksum>81B4AD2CAC1BF9FCD15C879E5AA28B2C0D99DD90FE29F9B1CF39E90DD21B2B97</RegisteredManifestChecksum>
-    <RegisteredPackageMoniker>04EE47F6-1EF7-42BE-AD9B-CCCA4627EA4F_0.0.15.0_x64__rm0d278rx07gr</RegisteredPackageMoniker>
+    <RegisteredManifestChecksum>E2B7A37DDA822265B329128F58B2E865E8C30801738C554A08EC76BC4B22DC49</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>04EE47F6-1EF7-42BE-AD9B-CCCA4627EA4F_0.0.17.0_x64__rm0d278rx07gr</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>04EE47F6-1EF7-42BE-AD9B-CCCA4627EA4F_rm0d278rx07gr!App</RegisteredUserModeAppID>
     <RegisteredPackageID>04EE47F6-1EF7-42BE-AD9B-CCCA4627EA4F</RegisteredPackageID>
     <RegisteredPackagePublisher>CN=PawelPrzytula</RegisteredPackagePublisher>
-    <RegisteredVersion>0.0.15.0</RegisteredVersion>
-    <JitOptimizationSuppressed>True</JitOptimizationSuppressed>
+    <RegisteredVersion>0.0.17.0</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
     <AppXManifest Include="C:\repos\PrivateProjects\CopyCost\CopyCost\bin\Debug\net7.0-windows10.0.19041.0\win10-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2023-07-01T15:41:09.669</Modified>
+      <Modified>2023-07-01T16:26:01.131</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\repos\PrivateProjects\CopyCost\CopyCost\bin\Debug\net7.0-windows10.0.19041.0\win10-x64\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2023-07-01T15:41:09.086</Modified>
+      <Modified>2023-07-01T16:26:00.751</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\repos\PrivateProjects\CopyCost\CopyCost\bin\Debug\net7.0-windows10.0.19041.0\win10-x64\CopyCost.runtimeconfig.json">
       <PackagePath>CopyCost.runtimeconfig.json</PackagePath>
-      <Modified>2023-07-01T14:28:06.143</Modified>
+      <Modified>2023-07-01T16:03:10.257</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\repos\PrivateProjects\CopyCost\CopyCost\bin\Debug\net7.0-windows10.0.19041.0\win10-x64\CopyCost.dll">
       <PackagePath>CopyCost.dll</PackagePath>
-      <Modified>2023-07-01T15:41:08.409</Modified>
+      <Modified>2023-07-01T16:25:59.845</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\repos\PrivateProjects\CopyCost\CopyCost\obj\Debug\net7.0-windows10.0.19041.0\win10-x64\apphost.exe">
       <PackagePath>CopyCost.exe</PackagePath>
-      <Modified>2023-07-01T15:41:08.425</Modified>
+      <Modified>2023-07-01T16:25:59.853</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\PawelPrzytula\.nuget\packages\microsoft.netcore.app.runtime.win-x64\7.0.7\runtimes\win-x64\lib\net7.0\Microsoft.CSharp.dll">
       <PackagePath>Microsoft.CSharp.dll</PackagePath>
@@ -1043,7 +1043,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\repos\PrivateProjects\CopyCost\CopyCost\obj\Debug\net7.0-windows10.0.19041.0\win10-x64\CopyCost.deps.json">
       <PackagePath>CopyCost.deps.json</PackagePath>
-      <Modified>2023-07-01T15:41:09.492</Modified>
+      <Modified>2023-07-01T16:26:00.988</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files\dotnet\packs\Microsoft.Maui.Controls.Ref.win\7.0.86\ref\net7.0-windows10.0.19041\Microsoft.Maui.Controls.Compatibility.pri">
       <PackagePath>Microsoft.Maui.Controls.Compatibility.pri</PackagePath>
@@ -1493,10 +1493,6 @@
       <PackagePath>libman.json</PackagePath>
       <Modified>2023-04-04T20:12:40.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\PawelPrzytula\.nuget\packages\psc.blazor.components.chartjs\6.0.40\contentFiles\any\net6.0\psc_ico.ico">
-      <PackagePath>psc_ico.ico</PackagePath>
-      <Modified>2023-04-04T20:12:40.000</Modified>
-    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\repos\PrivateProjects\CopyCost\CopyCost\Shared\MainLayout.razor.css">
       <PackagePath>Shared\MainLayout.razor.css</PackagePath>
       <Modified>2023-05-20T20:10:36.756</Modified>
@@ -1513,7 +1509,8 @@
       <Architecture>x86</Architecture>
       <FrameworkIdentity>Name = Microsoft.WindowsAppRuntime.1.2, MinVersion = 2000.707.2303.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
       <AppxLocation>C:\Users\PawelPrzytula\.nuget\packages\microsoft.windowsappsdk\1.2.221209.1\buildTransitive\..\tools\MSIX\win10-x86\Microsoft.WindowsAppRuntime.1.2.msix</AppxLocation>
-      <MoreInfo></MoreInfo>
+      <MoreInfo>
+      </MoreInfo>
     </ResolvedSDKReference>
     <ResolvedSDKReference Include="C:\Users\PawelPrzytula\.nuget\packages\microsoft.windowsappsdk\1.2.221209.1\buildTransitive\..\tools\MSIX\win10-x86\Microsoft.WindowsAppRuntime.1.2.msix">
       <Name>Microsoft.WindowsAppRuntime.1.2</Name>
@@ -1521,7 +1518,8 @@
       <Architecture>win32</Architecture>
       <FrameworkIdentity>Name = Microsoft.WindowsAppRuntime.1.2, MinVersion = 2000.707.2303.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
       <AppxLocation>C:\Users\PawelPrzytula\.nuget\packages\microsoft.windowsappsdk\1.2.221209.1\buildTransitive\..\tools\MSIX\win10-x86\Microsoft.WindowsAppRuntime.1.2.msix</AppxLocation>
-      <MoreInfo></MoreInfo>
+      <MoreInfo>
+      </MoreInfo>
     </ResolvedSDKReference>
     <ResolvedSDKReference Include="C:\Users\PawelPrzytula\.nuget\packages\microsoft.windowsappsdk\1.2.221209.1\buildTransitive\..\tools\MSIX\win10-x64\Microsoft.WindowsAppRuntime.1.2.msix">
       <Name>Microsoft.WindowsAppRuntime.1.2</Name>
@@ -1529,7 +1527,8 @@
       <Architecture>x64</Architecture>
       <FrameworkIdentity>Name = Microsoft.WindowsAppRuntime.1.2, MinVersion = 2000.707.2303.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
       <AppxLocation>C:\Users\PawelPrzytula\.nuget\packages\microsoft.windowsappsdk\1.2.221209.1\buildTransitive\..\tools\MSIX\win10-x64\Microsoft.WindowsAppRuntime.1.2.msix</AppxLocation>
-      <MoreInfo></MoreInfo>
+      <MoreInfo>
+      </MoreInfo>
     </ResolvedSDKReference>
     <ResolvedSDKReference Include="C:\Users\PawelPrzytula\.nuget\packages\microsoft.windowsappsdk\1.2.221209.1\buildTransitive\..\tools\MSIX\win10-arm64\Microsoft.WindowsAppRuntime.1.2.msix">
       <Name>Microsoft.WindowsAppRuntime.1.2</Name>
@@ -1537,7 +1536,8 @@
       <Architecture>arm64</Architecture>
       <FrameworkIdentity>Name = Microsoft.WindowsAppRuntime.1.2, MinVersion = 2000.707.2303.0, Publisher = %27CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US%27</FrameworkIdentity>
       <AppxLocation>C:\Users\PawelPrzytula\.nuget\packages\microsoft.windowsappsdk\1.2.221209.1\buildTransitive\..\tools\MSIX\win10-arm64\Microsoft.WindowsAppRuntime.1.2.msix</AppxLocation>
-      <MoreInfo></MoreInfo>
+      <MoreInfo>
+      </MoreInfo>
     </ResolvedSDKReference>
   </ItemGroup>
 </Project>

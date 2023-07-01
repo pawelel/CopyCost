@@ -1120,9 +1120,6 @@
     <AppxPackagedFile Include="C:\Users\PawelPrzytula\.nuget\packages\psc.blazor.components.chartjs\6.0.40\contentFiles\any\net6.0\libman.json">
       <PackagePath>libman.json</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\PawelPrzytula\.nuget\packages\psc.blazor.components.chartjs\6.0.40\contentFiles\any\net6.0\psc_ico.ico">
-      <PackagePath>psc_ico.ico</PackagePath>
-    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\repos\PrivateProjects\CopyCost\CopyCost\Shared\MainLayout.razor.css">
       <PackagePath>Shared\MainLayout.razor.css</PackagePath>
     </AppxPackagedFile>
